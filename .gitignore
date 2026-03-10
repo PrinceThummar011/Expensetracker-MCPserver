@@ -7,4 +7,18 @@ wheels/
 *.egg-info
 
 # Virtual environments
-.venv
+.venv/
+
+# Database — never commit user data
+data/expenses.db
+expenses.db
+
+# Environment variables
+.env
+
+# macOS
+.DS_Store
+
+# Editor
+.vscode/
+.idea/
