@@ -2,7 +2,7 @@
 
 # 💸 ExpenseTracker MCP Server
 
-**A Model Context Protocol (MCP) server for tracking personal expenses — powered by [FastMCP](https://gofastmcp.com) and SQLite.**
+**Track your expenses through natural language — no dashboards, no friction, just vibes and SQLite.**
 
 [![Python](https://img.shields.io/badge/Python-3.14+-blue?logo=python&logoColor=white)](https://python.org)
 [![FastMCP](https://img.shields.io/badge/FastMCP-3.1.0+-orange)](https://gofastmcp.com)
@@ -14,45 +14,47 @@
 
 ---
 
-## 📖 Overview
+## what is this
 
-**ExpenseTracker MCP Server** lets you manage your daily expenses through natural language via any MCP-compatible client (Claude Desktop, Cursor, Gemini CLI, etc.). Add, list, summarize, edit, and delete expenses — all through AI conversation, backed by a local SQLite database.
+**ExpenseTracker MCP Server** is a lightweight, fully local expense tracker that plugs directly into any MCP-compatible AI client — Claude Desktop, Cursor, Gemini CLI, you name it. Instead of opening some bloated finance app, you just *talk* to your AI and your expenses get logged, edited, summarized, or deleted. Backed by SQLite, zero cloud dependencies, zero API keys.
 
----
-
-## ✨ Features
-
-- 📝 **Add expenses** with date, amount, category, subcategory, and notes
-- 📋 **List expenses** within any date range
-- 📊 **Summarize spending** by category over any period
-- ✏️ **Edit expenses** — update only the fields you want
-- 🗑️ **Delete expenses** by ID
-- 📂 **Browse categories** as a structured MCP resource
-- ⚡ Fully local — no cloud, no API keys, just SQLite
+Built with [FastMCP](https://gofastmcp.com) + Python. Runs locally. Actually fast.
 
 ---
 
-## 🗂️ Project Structure
+## features
+
+- 📝 **Add expenses** — date, amount, category, subcategory, notes, the whole nine
+- 📋 **List expenses** — pull everything within any date range
+- 📊 **Summarize spending** — group by category, spot where your money actually goes
+- ✏️ **Edit expenses** — patch only the fields you want, nothing else changes
+- 🗑️ **Delete expenses** — gone, no confirm dialog, no drama
+- 📂 **Browse categories** — exposed as a live MCP resource, edit the JSON anytime
+- ⚡ **Fully local** — no cloud, no subscriptions, no data leaving your machine
+
+---
+
+## project structure
 
 ```
-Expensetracker-MCPserver/
-├── main.py              # MCP server — all tools & resources
-├── categories.json      # Expense categories & subcategories
+ExpenseTracker-MCPserver/
+├── main.py              # all the MCP tools & resources live here
+├── categories.json      # expense categories — edit freely, no restart needed
 ├── expenses.db          # SQLite database (auto-created on first run)
-├── pyproject.toml       # Project metadata & dependencies
+├── pyproject.toml       # project metadata & dependencies
 └── README.md
 ```
 
 ---
 
-## ⚙️ Prerequisites
+## prerequisites
 
 | Tool | Purpose |
 |---|---|
 | [Python 3.14+](https://python.org) | Runtime |
-| [uv](https://docs.astral.sh/uv/getting-started/installation/) | Package & environment manager |
+| [uv](https://docs.astral.sh/uv/getting-started/installation/) | Package & env manager |
 
-Install `uv` if you don't have it:
+Install `uv` if you haven't already:
 
 ```bash
 curl -LsSf https://astral.sh/uv/install.sh | sh
@@ -60,9 +62,9 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 
 ---
 
-## 🚀 Getting Started
+## getting started
 
-### 1. Clone the repository
+### 1. Clone the repo
 
 ```bash
 git clone https://github.com/PrinceThummar011/Expensetracker-MCPserver.git
@@ -81,222 +83,97 @@ uv sync
 uv run fastmcp run main.py
 ```
 
-> The SQLite database (`expenses.db`) is created automatically on first run.
+> `expenses.db` gets created automatically on first run. No setup needed.
 
 ---
 
-## 🔌 Install into MCP Clients
+## install into your AI client
 
-### Claude Desktop
+One command per client. Done.
 
 ```bash
+# Claude Desktop
 uv run fastmcp install claude-desktop main.py
-```
 
-### Cursor
-
-```bash
+# Cursor
 uv run fastmcp install cursor main.py
-```
 
-### Claude Code
-
-```bash
+# Claude Code
 uv run fastmcp install claude-code main.py
-```
 
-### Gemini CLI
-
-```bash
+# Gemini CLI
 uv run fastmcp install gemini-cli main.py
 ```
 
-> Restart the client after installing — tools appear automatically.
+Restart the client after installing — tools appear automatically.
 
 ---
 
-## 🧪 Testing & Development Commands
+## available tools
 
-### Interactive browser UI — MCP Inspector
-
-```bash
-uv run fastmcp dev inspector main.py
-```
-
-Launches a live browser UI to call all tools interactively. Auto-reloads on file save.
-
-> In the Inspector, select **STDIO** from the transport dropdown and click **Connect**.
-
----
-
-### Inspect — view tools, resources & metadata
-
-```bash
-uv run fastmcp inspect main.py
-```
-
-Sample output:
-
-```
-Server: ExpenseTracker
-
-Components:
-  Tools: 5
-  Resources: 1
-
-Environment:
-  FastMCP: 3.1.0
-  MCP: 1.x.x
-
-Use --format [fastmcp|mcp] for complete JSON output
-```
-
-Full JSON output:
-
-```bash
-uv run fastmcp inspect main.py --format fastmcp
-uv run fastmcp inspect main.py --format mcp -o manifest.json
-```
-
----
-
-### List tools
-
-```bash
-uv run fastmcp list main.py
-```
-
-Include resources and full schemas:
-
-```bash
-uv run fastmcp list main.py --resources
-uv run fastmcp list main.py --input-schema
-uv run fastmcp list main.py --json
-```
-
----
-
-### Call tools directly from terminal
-
-```bash
-# Add an expense
-uv run fastmcp call main.py add_expense \
-  date=2026-03-10 amount=150 category=food subcategory=dining_out note="Lunch"
-
-# List expenses
-uv run fastmcp call main.py list_expenses \
-  start_date=2026-03-01 end_date=2026-03-31
-
-# Summarize spending
-uv run fastmcp call main.py summarize \
-  start_date=2026-03-01 end_date=2026-03-31
-
-# Edit an expense
-uv run fastmcp call main.py edit_expense \
-  expense_id=1 amount=200 note="Updated"
-
-# Delete an expense
-uv run fastmcp call main.py delete_expense expense_id=1
-```
-
-JSON output for any call:
-
-```bash
-uv run fastmcp call main.py list_expenses \
-  start_date=2026-03-01 end_date=2026-03-31 --json
-```
-
----
-
-### Run with auto-reload (development)
-
-```bash
-uv run fastmcp run main.py --reload
-```
-
----
-
-### Discover all configured MCP servers
-
-```bash
-uv run fastmcp discover
-```
-
----
-
-### Check FastMCP version
-
-```bash
-uv run fastmcp version
-```
-
----
-
-## 🛠️ Available MCP Tools
-
-| Tool | Description |
+| Tool | What it does |
 |---|---|
-| `add_expense` | Add a new expense entry |
-| `list_expenses` | List all expenses in a date range |
-| `summarize` | Summarize spending by category |
-| `edit_expense` | Edit an existing expense by ID |
-| `delete_expense` | Delete an expense by ID |
+| `add_expense` | Log a new expense |
+| `list_expenses` | Fetch all expenses in a date range |
+| `summarize` | Spending breakdown by category |
+| `edit_expense` | Update specific fields on an existing expense |
+| `delete_expense` | Remove an expense by ID |
 
-### Tool Details
+### tool reference
 
 #### `add_expense`
 
-| Parameter | Type | Required | Description |
+| Parameter | Type | Required | Notes |
 |---|---|---|---|
-| `date` | `str` | ✅ | Date in `YYYY-MM-DD` format |
+| `date` | `str` | ✅ | `YYYY-MM-DD` |
 | `amount` | `float` | ✅ | Expense amount |
-| `category` | `str` | ✅ | Main category (e.g. `food`) |
-| `subcategory` | `str` | ❌ | Subcategory (e.g. `dining_out`) |
-| `note` | `str` | ❌ | Optional note |
+| `category` | `str` | ✅ | e.g. `food`, `transport` |
+| `subcategory` | `str` | ❌ | e.g. `dining_out`, `fuel` |
+| `note` | `str` | ❌ | Free text |
 
 #### `list_expenses`
 
-| Parameter | Type | Required | Description |
+| Parameter | Type | Required | Notes |
 |---|---|---|---|
-| `start_date` | `str` | ✅ | Start date `YYYY-MM-DD` |
-| `end_date` | `str` | ✅ | End date `YYYY-MM-DD` |
+| `start_date` | `str` | ✅ | `YYYY-MM-DD` |
+| `end_date` | `str` | ✅ | `YYYY-MM-DD` |
 
-Returns all records in range, ordered by date and ID.
+Returns all records in range, ordered by ID ascending.
 
 #### `summarize`
 
-| Parameter | Type | Required | Description |
+| Parameter | Type | Required | Notes |
 |---|---|---|---|
-| `start_date` | `str` | ✅ | Start date `YYYY-MM-DD` |
-| `end_date` | `str` | ✅ | End date `YYYY-MM-DD` |
+| `start_date` | `str` | ✅ | `YYYY-MM-DD` |
+| `end_date` | `str` | ✅ | `YYYY-MM-DD` |
 | `category` | `str` | ❌ | Filter to a single category |
 
-Returns total spending per category, sorted by highest spend.
+Returns total per category, sorted alphabetically.
 
 #### `edit_expense`
 
-| Parameter | Type | Required | Description |
+| Parameter | Type | Required | Notes |
 |---|---|---|---|
-| `expense_id` | `int` | ✅ | ID of the expense to edit |
+| `expense_id` | `int` | ✅ | ID of the expense |
 | `date` | `str` | ❌ | New date |
 | `amount` | `float` | ❌ | New amount |
 | `category` | `str` | ❌ | New category |
 | `subcategory` | `str` | ❌ | New subcategory |
 | `note` | `str` | ❌ | New note |
 
-Only provided fields are updated — all others stay unchanged.
+Only the fields you pass get updated. Everything else stays untouched.
 
 #### `delete_expense`
 
-| Parameter | Type | Required | Description |
+| Parameter | Type | Required | Notes |
 |---|---|---|---|
 | `expense_id` | `int` | ✅ | ID of the expense to delete |
 
 ---
 
-## 📂 Expense Categories
+## expense categories
 
-Defined in [`categories.json`](categories.json) — edit freely without restarting the server.
+Defined in `categories.json`. Edit the file freely — no server restart needed, it's read fresh every time.
 
 | Category | Sample Subcategories |
 |---|---|
@@ -315,21 +192,114 @@ Defined in [`categories.json`](categories.json) — edit freely without restarti
 
 ---
 
-## 💬 Example Prompts (in Claude)
+## example prompts (once connected to Claude)
 
-Once connected to Claude Desktop, try:
+Literally just talk to it:
 
-- *"Add an expense of ₹250 for lunch today under food > dining_out"*
-- *"Show me all my expenses this month"*
-- *"How much did I spend on transport in February 2026?"*
-- *"Edit expense ID 5 — change the amount to ₹500"*
-- *"Delete expense number 3"*
-- *"Summarize my spending for March 2026 by category"*
-- *"What's my biggest spending category this year?"*
+```
+"Add an expense of ₹250 for lunch today under food > dining_out"
+"Show me all my expenses this month"
+"How much did I spend on transport in February 2026?"
+"Edit expense ID 5 — change the amount to ₹500"
+"Delete expense number 3"
+"Summarize my spending for March 2026 by category"
+"What's my biggest spending category this year?"
+```
 
 ---
 
-## 📦 Dependencies
+## dev & testing
+
+### Interactive MCP Inspector (browser UI)
+
+```bash
+uv run fastmcp dev inspector main.py
+```
+
+Spins up a live browser UI to call all tools interactively. Auto-reloads on save. In the Inspector, select **STDIO** from the transport dropdown and hit **Connect**.
+
+### Inspect the server
+
+```bash
+# Quick summary
+uv run fastmcp inspect main.py
+
+# Full JSON output
+uv run fastmcp inspect main.py --format fastmcp
+uv run fastmcp inspect main.py --format mcp -o manifest.json
+```
+
+### List tools
+
+```bash
+uv run fastmcp list main.py
+uv run fastmcp list main.py --resources
+uv run fastmcp list main.py --input-schema
+uv run fastmcp list main.py --json
+```
+
+### Call tools from terminal
+
+```bash
+# add
+uv run fastmcp call main.py add_expense \
+  date=2026-03-10 amount=150 category=food subcategory=dining_out note="Lunch"
+
+# list
+uv run fastmcp call main.py list_expenses \
+  start_date=2026-03-01 end_date=2026-03-31
+
+# summarize
+uv run fastmcp call main.py summarize \
+  start_date=2026-03-01 end_date=2026-03-31
+
+# edit
+uv run fastmcp call main.py edit_expense \
+  expense_id=1 amount=200 note="Updated"
+
+# delete
+uv run fastmcp call main.py delete_expense expense_id=1
+
+# json output
+uv run fastmcp call main.py list_expenses \
+  start_date=2026-03-01 end_date=2026-03-31 --json
+```
+
+### Run with auto-reload
+
+```bash
+uv run fastmcp run main.py --reload
+```
+
+### Discover all configured MCP servers
+
+```bash
+uv run fastmcp discover
+```
+
+---
+
+## adding a new tool
+
+Open `main.py` and add a decorated function:
+
+```python
+@mcp.tool()
+def my_new_tool(param: str):
+    '''Description of what this tool does.'''
+    # your logic here
+    return {"status": "ok"}
+```
+
+Then reinstall into your client:
+
+```bash
+uv run fastmcp install claude-desktop main.py
+```
+
+---
+
+## dependencies
 
 | Package | Version | Purpose |
 |---|---|---|
@@ -342,34 +312,8 @@ uv sync
 
 ---
 
-## 🔧 Development
+## license
 
-### Add a new tool
-
-In [`main.py`](main.py):
-
-```python
-@mcp.tool()
-def my_new_tool(param: str):
-    '''Description of what this tool does.'''
-    # your logic here
-    return {"status": "ok"}
-```
-
-### Re-install into clients after changes
-
-```bash
-uv run fastmcp install claude-desktop main.py
-```
+MIT — use it, fork it, ship it.
 
 ---
-
-## 📄 License
-
-MIT License — free to use, modify, and distribute.
-
----
-
-<div align="center">
-Made with ❤️ using <a href="https://gofastmcp.com">FastMCP</a> + <a href="https://docs.astral.sh/uv/">uv</a>
-</div>
